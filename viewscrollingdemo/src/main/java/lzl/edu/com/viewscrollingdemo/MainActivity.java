@@ -1,55 +1,44 @@
 package lzl.edu.com.viewscrollingdemo;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
 
-import java.util.ArrayList;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final String TAG = "MainActivity";
 
-import lzl.edu.com.viewscrollingdemo.view.HorizontalScrollViewEX;
-
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG="MainActivity";
-    private HorizontalScrollViewEX mContainer;
+    private Button demo1Btn;
+    private Button demo2Btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
+        init();
+    }
+    private void init(){
+        demo1Btn = (Button) findViewById(R.id.demo1Btn);
+        demo2Btn = (Button) findViewById(R.id.demo2Btn);
+
+        demo1Btn.setOnClickListener(this);
+        demo2Btn.setOnClickListener(this);
     }
 
-    private void initView() {
-        mContainer = (HorizontalScrollViewEX) findViewById(R.id.mContainers);
-        DisplayMetrics metric = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int width = metric.widthPixels;
-        for(int i=0;i<3;i++){
-            ViewGroup layout = (ViewGroup) LayoutInflater.from(this).inflate
-                    (R.layout.content_layout,mContainer,false);
-            layout.getLayoutParams().width = width;
-            TextView tv= (TextView) layout.findViewById(R.id.tv);
-            tv.setText("第"+(i+1)+"页");
-            layout.setBackgroundColor(Color.rgb(255/(i+1),255/(i+1),0));
-            createList(layout);
-            mContainer.addView(layout);
+    @Override
+    public void onClick(View v) {
+        Intent mIntent = new Intent();
+        switch (v.getId())
+        {
+            case R.id.demo1Btn:
+                mIntent.setClass(MainActivity.this,DemoActivity_1.class);
+                startActivity(mIntent);
+                break;
+            case R.id.demo2Btn:
+                mIntent.setClass(MainActivity.this,DemoActivity_2.class);
+                startActivity(mIntent);
+                break;
+            default:break;
         }
-    }
-    private void createList(ViewGroup layout){
-        ListView listView = (ListView) layout.findViewById(R.id.lv);
-        ArrayList<String> arrayList = new ArrayList<>();
-        for(int i=0;i<30;i++){
-            arrayList.add("数据"+i);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                R.layout.item_list_content,R.id.itemTv,arrayList);
-
-        listView.setAdapter(adapter);
     }
 }
